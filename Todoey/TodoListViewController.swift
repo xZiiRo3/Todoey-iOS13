@@ -12,7 +12,7 @@ class TodoListViewController: UITableViewController {
     
     
     
-    let itemArray = ["Yeet",
+    var itemArray = ["Yeet",
                      "lets get it",
                      "send nudes"]
     
@@ -51,5 +51,43 @@ class TodoListViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         
     }
+    //MARK - Add New Items
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        
+        let alert = UIAlertController(title: "Add New Item?", message: "", preferredStyle: .alert)
+        
+        var textField = UITextField()
+        
+        
+        alert.addTextField { alertTextField in
+            alertTextField.placeholder = "Create New Item"
+            textField = alertTextField
+        }
+
+        
+        let action = UIAlertAction(title: "Add Item", style: .default) { action in
+            
+            //what will happen once user clicks add item
+            print("success")
+            
+            if textField.text! == "" {
+                textField.placeholder = "Entry cannot be empty..."
+                self.present(alert, animated: true, completion: nil)
+            } else {
+                self.itemArray.append(textField.text!)
+            }
+            
+            self.tableView.reloadData()
+        }
+        
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+        
+    }
+    
     
 }
+
+
+
+
