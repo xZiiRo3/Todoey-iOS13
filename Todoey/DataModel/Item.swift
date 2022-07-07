@@ -9,7 +9,7 @@
 import Foundation
 
 struct Item {
-    let title: String
+    var title: String = ""
     var done: Bool = false
     
 }

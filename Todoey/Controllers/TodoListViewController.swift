@@ -11,10 +11,7 @@ import UIKit
 class TodoListViewController: UITableViewController {
     
     
-//    var itemArray = [ ["Yeet", 0],
-//                      ["lets get it", 0],
-//                      ["send nudes", 1 ],
-//                      ["Yeet", 0] ]
+    var itemArray = [ Item ]()
     
     
     var revisedItemArray: [ Item ] = [Item.init(title: "go"),
@@ -28,9 +25,26 @@ class TodoListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
-//            itemArray = items
-//        }
+        var newItem = Item()
+        newItem.title = "Find mike"
+        itemArray.append(newItem)
+        
+        var newItem2 = Item()
+        newItem2.title = "Breads"
+        itemArray.append(newItem2)
+        
+        var newItem3 = Item()
+        newItem3.title = "Lets get it"
+        itemArray.append(newItem3)
+        
+        var newItem4 = Item()
+        newItem4.title = "yeet"
+        itemArray.append(newItem4)
+        
+        
+        if let items = defaults.array(forKey: "TodoListArray") as? [Item] {
+            itemArray = items
+        }
 
         
         
@@ -38,44 +52,29 @@ class TodoListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return revisedItemArray.count
+        return itemArray.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let message = revisedItemArray[indexPath.row].title
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
-        
-        cell.textLabel?.text = message
+        let item = itemArray[indexPath.row]
+        cell.textLabel?.text = item.title
     
         
         //if itemArray[indexPath.row][1] as! Int  == 0 {
-        if revisedItemArray[indexPath.row].done == false {
-            cell.accessoryType = .none
-        }else{
-            cell.accessoryType = .checkmark
-        }
+        
+        cell.accessoryType = item.done ? .checkmark : .none
         
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        //print(itemArray[indexPath.row])
+        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
-        //if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-        if revisedItemArray[indexPath.row].done == false {
-            //self.tableView.cellForRow(at: indexPath)?.accessoryType = .none
-            self.tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-            revisedItemArray[indexPath.row].done = true
-        }else{
-            //self.tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-            self.tableView.cellForRow(at: indexPath)?.accessoryType = .none
-            revisedItemArray[indexPath.row].done = false
-        }
+        tableView.reloadData()
         
         tableView.deselectRow(at: indexPath, animated: true)
-//        tableView.reloadData()
         
     }
     //MARK - Add New Items
@@ -101,11 +100,14 @@ class TodoListViewController: UITableViewController {
                 textField.placeholder = "Entry cannot be empty..."
                 self.present(alert, animated: true, completion: nil)
             } else {
-                self.revisedItemArray.append( Item.init(title: textField.text!) )
+                
+                var newItem = Item()
+                newItem.title = textField.text!
+                self.itemArray.append(newItem)
                 
                // self.itemArray.append([textField.text!, 0])
 //                self.itemArray.append(textField.text!)
-//                self.defaults.set(self.itemArray, forKey: "TodoListArray")
+                self.defaults.set(self.itemArray, forKey: "TodoListArray")
             }
             
             self.tableView.reloadData()
